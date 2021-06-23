@@ -1,0 +1,58 @@
+{
+  "name": "css-import-order",
+  "version": "1.0.0",
+  "description": "A simple eslint rule to correctly order css imports",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf lib",
+    "prebuild": "rimraf node_modules/@types/eslint/node_modules/@types/estree",
+    "build": "tsc",
+    "test": "jest",
+    "prepublish": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "eslint",
+    "typescript",
+    "imports"
+  ],
+  "author": "777PolarFox777",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/eslint": "7.2.13",
+    "@types/estree": "0.0.47",
+    "@types/node": "14.17.3",
+    "@typescript-eslint/parser": "4.26.0",
+    "eslint": "^7.29.0",
+    "husky": "4.3.8",
+    "jest": "27.0.3",
+    "prettier": "2.3.0",
+    "pretty-quick": "3.1.1",
+    "rimraf": "3.0.2",
+    "ts-jest": "27.0.2",
+    "typescript": "4.3.4"
+  },
+  "peerDependencies": {
+    "eslint": "^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "diagnostics": false
+      }
+    },
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(src/.*\\.test)\\.ts$",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "\\.d\\.ts$",
+      "lib/.*"
+    ],
+    "moduleFileExtensions": [
+      "js",
+      "ts",
+      "json"
+    ]
+  }
+}
