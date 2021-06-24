@@ -5,17 +5,17 @@ const rule: Rule.RuleModule = {
   meta: {
     fixable: "code",
     type: "layout",
-
   },
   create: context => {
     let importStatements: (ImportDeclaration & Rule.NodeParentExtension)[] = [];
+
     return {
       ImportDeclaration: node => {
         importStatements.push(node);
       },
       "Program:exit": () => {
         const sourceCode = context.getSourceCode();
-        const cssImport = importStatements.find((imp) => /\.s?css$/.test(imp.source.value as string) )
+        const cssImport = importStatements.find((imp) => /\.s?css$/.test(imp.source.value as string));
 
         const lastImport = importStatements[importStatements.length - 1];
 
@@ -29,41 +29,65 @@ const rule: Rule.RuleModule = {
         if (!currentLineNumber || currentLineNumber < 0) {
           return;
         }
-        const currentLineIndex = currentLineNumber - 1;
-        const lineBeforeInput = lines[currentLineIndex - 1]
 
-        // if the css import is the last import already - just add a blank line before it
+        const currentLineIndex = currentLineNumber - 1;
+        const lineBeforeCssImport = lines[currentLineIndex - 1];
+        // if this is the first line isLineBeforeCssImportEmpty should be false
+        const isLineBeforeCssImportEmpty = lineBeforeCssImport != undefined ? /^\s*$/g.test(lineBeforeCssImport) : false;
+
+        // if the css import is the last import already
         if (importStatements.indexOf(lastImport) === importStatements.indexOf(cssImport)) {
-          if (!/^\s*$/g.test(lineBeforeInput)) {
+          // insert an empty line if missing
+          if (!isLineBeforeCssImportEmpty) {
             context.report({
               node: cssImport,
               message: "Expected a new line before the css import statement",
               fix(fixer) {
                 return fixer.insertTextBefore(cssImport, "\n");
-              }
-            })
+              },
+            });
           }
-
           return;
         }
 
-        const cssImportCode = "\n" + sourceCode.text.slice(...cssImport.range as number[]);
-        const lastImportCode = sourceCode.text.slice(...lastImport.range as number[]);
+        const cssImportRange = cssImport.range as AST.Range;
 
-        // if the css import is not the last one - swap with the last one
+        const cssImportCode = "\n\n" + sourceCode.text.slice(...cssImportRange);
+
+        const oldCssImportRange = (() => {
+          // if the first line
+          if (currentLineIndex === 0) {
+            // remove with the \n in the end of line
+            return [0, cssImportRange[1] + 1] as AST.Range;
+          }
+
+          // if there's an empty line before
+          if (isLineBeforeCssImportEmpty) {
+            // remove with the \n\n before the line
+            return [cssImportRange[0] - 2, cssImportRange[1]] as AST.Range;
+          }
+          // other cases
+
+          // remove with the \n before the line
+          return [cssImportRange[0] - 1, cssImportRange[1]] as AST.Range;
+        })();
+
+        // if the css import is not the last one - remove the old css and append the new one after the last import
         context.report({
           node: cssImport,
           message: "Expected the css import statement to be in the end of the import block",
           fix(fixer) {
             return [
-              fixer.replaceTextRange(cssImport.range as AST.Range, lastImportCode),
-              fixer.replaceTextRange(lastImport.range as AST.Range, cssImportCode)
+              // append css import after the last import
+              fixer.insertTextAfter(lastImport, cssImportCode),
+              // stripe out css import from previous place
+              fixer.replaceTextRange(oldCssImportRange, ""),
             ];
-          }
-        })
+          },
+        });
 
-        importStatements = []
-      }
+        importStatements = [];
+      },
     };
   },
 };

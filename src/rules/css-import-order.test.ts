@@ -31,8 +31,47 @@ import React from "react";
 import localFile from "../local/file";`,
       errors: [{ message: "Expected the css import statement to be in the end of the import block" }],
       output:
-`import localFile from "../local/file";
-import React from "react";
+`import React from "react";
+import localFile from "../local/file";
+
+import "./local-css-file.scss";`
+    },
+    {
+      code:
+        `import React from "react";
+
+import "./local-css-file.scss";
+import localFile from "../local/file";`,
+      errors: [{ message: "Expected the css import statement to be in the end of the import block" }],
+      output:
+        `import React from "react";
+import localFile from "../local/file";
+
+import "./local-css-file.scss";`
+    },
+    {
+      code:
+        `import React from "react";
+import "./local-css-file.scss";
+import localFile from "../local/file";`,
+      errors: [{ message: "Expected the css import statement to be in the end of the import block" }],
+      output:
+        `import React from "react";
+import localFile from "../local/file";
+
+import "./local-css-file.scss";`
+    },
+    {
+      code:
+        `import React from "react";
+import "./local-css-file.scss";
+
+import localFile from "../local/file";`,
+      errors: [{ message: "Expected the css import statement to be in the end of the import block" }],
+      output:
+        `import React from "react";
+
+import localFile from "../local/file";
 
 import "./local-css-file.scss";`
     },
