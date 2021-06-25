@@ -25,6 +25,13 @@ import "./other-local-css-file.scss";`,
         `import "./local-css-file.scss";
 import "./other-local-css-file.scss";
 import "./one-more-local-css-file.scss";`,
+    },
+    { code:
+        `import React from "react";
+import localFile from "../local/file";
+
+// my awesome css import
+import "./local-css-file.scss";`,
     }],
   invalid: [
     { code:
@@ -32,7 +39,6 @@ import "./one-more-local-css-file.scss";`,
 import "./other-local-css-file.scss";
 import "./one-more-local-css-file.scss";
 import React from "react";`,
-      options: [{ applyAllFixes: true }],
       errors: [endOfTheInputBlockError, endOfTheInputBlockError, endOfTheInputBlockError],
       output:
         `import "./other-local-css-file.scss";
@@ -150,6 +156,20 @@ import {
  C,
 } from "./some-stuff";
 
+import "./local-css-file.scss";`,
+    },
+    {
+      code:
+        `import React from "react";
+import localFile from "../local/file";
+// my awesome css import
+import "./local-css-file.scss";`,
+      errors: [newLineBeforeError],
+      output:
+        `import React from "react";
+import localFile from "../local/file";
+
+// my awesome css import
 import "./local-css-file.scss";`,
     },
   ],

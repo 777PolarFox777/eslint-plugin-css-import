@@ -39,9 +39,16 @@ const rule: Rule.RuleModule = {
 
           const currentLineIndex = currentLineNumber - 1;
           const lineBeforeCssImport = lines[currentLineIndex - 1];
+
+          const trimmedLineBeforeCssImport = lineBeforeCssImport?.trim();
+          const isComment = trimmedLineBeforeCssImport?.startsWith("//") || trimmedLineBeforeCssImport?.startsWith("/*") || trimmedLineBeforeCssImport?.startsWith("*/");
+
+          const lineBeforeCssImportWithoutComment = isComment ? lines[currentLineIndex - 2] : lineBeforeCssImport;
+
           // if this is the first line isLineBeforeCssImportEmpty should be false
-          const isLineBeforeCssImportEmpty = lineBeforeCssImport != undefined ? /^\s*$/g.test(lineBeforeCssImport) : false;
-          const isLineBeforeCssImportIsCssImport = lineBeforeCssImport && checkForCssImport(lineBeforeCssImport);
+          const isLineBeforeCssImportEmpty = lineBeforeCssImportWithoutComment != undefined ? /^\s*$/g.test(lineBeforeCssImportWithoutComment) : false;
+
+          const isLineBeforeCssImportIsCssImport = lineBeforeCssImportWithoutComment && checkForCssImport(lineBeforeCssImportWithoutComment);
 
           // if the css import is below the last non css import and there's a blank line or other css import above - do nothing
           if (currentLineNumber > lastNonCssImportLineNumber && (isLineBeforeCssImportEmpty || isLineBeforeCssImportIsCssImport)) {
@@ -49,12 +56,14 @@ const rule: Rule.RuleModule = {
           }
 
           // if the line before css import is the last non css import
-          if (lineBeforeCssImport && sourceCode.text.slice(...lastNonCssImportRange).includes(lineBeforeCssImport)) {
+          if (lineBeforeCssImportWithoutComment && sourceCode.text.slice(...lastNonCssImportRange).includes(lineBeforeCssImportWithoutComment)) {
+            const comments = sourceCode.getCommentsBefore(cssImport);
+
             return context.report({
                 node: cssImport,
                 message: "Expected a new line before the css import statement",
                 fix(fixer) {
-                  return fixer.insertTextBefore(cssImport, "\n");
+                  return fixer.insertTextBefore(comments[0] as unknown as AST.Token ?? cssImport, "\n");
                 },
               });
           }
