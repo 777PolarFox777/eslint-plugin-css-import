@@ -132,5 +132,25 @@ import localFile from "../local/file";
 
 import "./local-css-file.scss";`,
     },
+    {
+      code:
+        `import React from "react";
+import {
+ A,
+ B,
+ C,
+} from "./some-stuff";
+import "./local-css-file.scss";`,
+      errors: [newLineBeforeError],
+      output:
+        `import React from "react";
+import {
+ A,
+ B,
+ C,
+} from "./some-stuff";
+
+import "./local-css-file.scss";`,
+    },
   ],
 });

@@ -49,7 +49,7 @@ const rule: Rule.RuleModule = {
           }
 
           // if the line before css import is the last non css import
-          if (lineBeforeCssImport && lineBeforeCssImport === sourceCode.text.slice(...lastNonCssImportRange)) {
+          if (lineBeforeCssImport && sourceCode.text.slice(...lastNonCssImportRange).includes(lineBeforeCssImport)) {
             return context.report({
                 node: cssImport,
                 message: "Expected a new line before the css import statement",
