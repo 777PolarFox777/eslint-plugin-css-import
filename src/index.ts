@@ -1,5 +1,4 @@
 import cssImportOrder from "./rules/css-import-order";
-// @ts-ignore
 import recommended from "./config/recommended";
 
 export const rules =  {
