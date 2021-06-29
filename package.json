@@ -1,5 +1,5 @@
 {
-  "name": "css-import-order",
+  "name": "eslint-plugin-css-import-order",
   "version": "1.0.0",
   "description": "A simple eslint rule to correctly order css imports",
   "main": "lib/index.js",
