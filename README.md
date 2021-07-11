@@ -1,5 +1,7 @@
-# eslint-plugin-css-import
+# eslint-plugin-css-import-order
 Adds a simple eslint rule to correctly order css imports
+
+[![npm version](https://badge.fury.io/js/eslint-plugin-css-import-order.svg)](https://badge.fury.io/js/eslint-plugin-css-import-order)
 
 # Concept
 
