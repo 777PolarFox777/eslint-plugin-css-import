@@ -24,13 +24,13 @@ So css imports are not mixed with regular imports.
 
 # Installation
 
-Simply install the package: `npm i -D eslin-plugin-css-import` or `yarn add -D eslin-plugin-css-import`.
+Simply install the package: `npm i -D eslint-plugin-css-import-order` or `yarn add -D eslint-plugin-css-import-order`.
 
 Then in your `.eslintrc` add:
 
 ```json
 {
-  "plugins": ["eslint-plugin-css-import"],
-  "extends": ["eslint-plugin-css-import/recommended"]
+  "plugins": ["css-import-order"],
+  "extends": ["css-import-order/recommended"]
 }
 ```
