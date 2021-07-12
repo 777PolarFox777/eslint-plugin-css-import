@@ -31,6 +31,6 @@ Then in your `.eslintrc` add:
 ```json
 {
   "plugins": ["css-import-order"],
-  "extends": ["css-import-order/recommended"]
+  "extends": ["plugin:css-import-order/recommended"]
 }
 ```
